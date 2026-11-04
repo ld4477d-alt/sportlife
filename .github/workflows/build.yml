@@ -11,11 +11,15 @@ jobs:
         with:
           python-version: '3.11'
           
-      - name: Setup Java JDK
+      # Используем официальный образ с Java и Android SDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '17'
+          
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
           
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -23,20 +27,15 @@ jobs:
           flutter-version: '3.19.0'
           channel: 'stable'
           
-      # Устанавливаем библиотеки Linux, чтобы Flutter был доволен
-      - name: Install Linux Dependencies
+      # Обходим ошибку с watchdog и лицензиями
+      - name: Patch and Prepare
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev liblzma-dev clang cmake ninja-build pkg-config
-          
-      # Принимаем лицензии Android SDK
-      - name: Accept Android Licenses
-        run: |
+          # Удаляем watchdog из зависимостей flet
+          pip install flet==0.24.1
+          pip uninstall watchdog -y || true
+          # Принимаем лицензии, чтобы Flutter не ругался
           yes | flutter doctor --android-licenses || true
           
-      - name: Install Flet (старая версия)
-        run: pip install flet==0.24.1
-        
       - name: Build APK
         env:
           API_URL: "http://192.168.3.75:8000"
