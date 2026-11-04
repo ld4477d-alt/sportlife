@@ -17,8 +17,8 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           
-      - name: Install Flet
-        run: pip install flet
+      - name: Install Flet (0.24.1)
+        run: pip install flet==0.24.1
         
       - name: Build APK
         env:
