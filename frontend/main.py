@@ -1,5 +1,5 @@
 import flet as ft
-from frontend.views import (
+from views import (
     login_view, register_view, catalog_view, product_view,
     cart_view, orders_view, profile_view, admin_view, favorites_view
 )
