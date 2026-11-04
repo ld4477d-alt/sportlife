@@ -11,4 +11,4 @@ company = "Sport Life"
 [tool.flet.app]
 path = "."
 module = "main"
-exclude = ["watchdog", "uvicorn", "fastapi", "sqlalchemy"]
+exclude = ["watchdog", "uvicorn", "fastapi", "sqlalchemy", "psycopg2"]
