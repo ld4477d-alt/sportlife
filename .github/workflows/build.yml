@@ -17,13 +17,13 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           
-      - name: Install Flet (версия 0.24.1)
-        run: pip install flet==0.24.1
+      - name: Install Flet
+        run: pip install flet
         
       - name: Build APK
         env:
           API_URL: "http://192.168.3.75:8000"
-        run: flet build apk   # <--- УБРАЛИ --yes
+        run: flet build apk
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
