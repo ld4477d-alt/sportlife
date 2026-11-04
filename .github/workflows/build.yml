@@ -23,7 +23,7 @@ jobs:
       - name: Build APK
         env:
           API_URL: "http://192.168.3.75:8000"
-        run: flet build apk --yes
+        run: flet build apk   # <--- УБРАЛИ --yes
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
