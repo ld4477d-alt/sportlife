@@ -6,47 +6,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Setup Java JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Install Flet
-        run: pip install flet==0.24.1
-
-      - name: Build APK and Patch Gradle
+          
+      # Говорим GitHub использовать уже установленный SDK
+      - name: Set up Android SDK
         run: |
-          # Запускаем Flet в фоне
-          flet build apk & 
-          FLET_PID=$!
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
           
-          # Ждем, пока он создаст папку сборки
-          echo "Ждем появления папки сборки..."
-          while true; do
-            BUILD_DIR=$(find /tmp -maxdepth 1 -name "flet_flutter_build_*" | head -n 1)
-            if [ -n "$BUILD_DIR" ]; then
-              echo "Нашли папку: $BUILD_DIR"
-              break
-            fi
-            sleep 1
-          done
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flet==0.24.1
           
-          # Меняем Gradle на 8.14
-          GRADLE_FILE="$BUILD_DIR/android/gradle/wrapper/gradle-wrapper.properties"
-          if [ -f "$GRADLE_FILE" ]; then
-            sed -i 's/gradle-8.7/gradle-8.14/g' "$GRADLE_FILE"
-            echo "✅ Gradle обновлен на 8.14"
-          fi
+      - name: Build APK
+        run: |
+          # Запускаем сборку (Gradle 8.14 уже в системе)
+          flet build apk
           
-          # Ждем, пока Flet закончит сборку
-          wait $FLET_PID
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
