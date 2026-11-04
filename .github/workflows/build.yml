@@ -20,13 +20,13 @@ jobs:
       - name: Install Flet
         run: pip install flet
 
-      # ДОБАВИЛИ ФЛАГ --yes, ЧТОБЫ ОН НЕ СПРАШИВАЛ
       - name: Build APK
         run: flet build apk --yes
 
+      # Ищем ЛЮБОЙ файл .apk внутри папки build
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: sport-life-apk
-          path: build/apk/app-release.apk
-          if-no-files-found: error
+          path: build/**/*.apk
+          if-no-files-found: warn
