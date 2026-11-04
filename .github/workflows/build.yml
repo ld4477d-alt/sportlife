@@ -26,14 +26,19 @@ jobs:
           channel: 'stable'
           cache: true
       
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev ninja-build
+      
       - name: Enable Android
         run: flutter config --enable-android
       
       - name: Accept Android licenses
         run: yes | flutter doctor --android-licenses || true
       
-      - name: Build APK (ignore doctor warnings)
-        run: flet build apk
+      - name: Build APK
+        run: flet build apk --skip-flutter-doctor
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
