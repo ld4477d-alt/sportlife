@@ -1,6 +1,12 @@
 [project]
 name = "sport_life"
 version = "1.0.0"
+description = "Спорт лайф - магазин спортивной одежды"
+# ВОТ ГЛАВНАЯ СТРОЧКА: говорим экшену, что нам нужен Flet
+dependencies = [
+    "flet==0.24.1",
+    "requests==2.32.3"
+]
 
 [tool.flet]
 product = "Спорт лайф"
@@ -10,5 +16,3 @@ company = "Sport Life"
 
 [tool.flet.app]
 path = "."
-module = "main"
-exclude = ["watchdog", "uvicorn", "fastapi", "sqlalchemy", "psycopg2"]
