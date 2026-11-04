@@ -17,12 +17,22 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           
-      # СКАЧИВАЕМ FLUTTER ВРУЧНУЮ
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.0'
           channel: 'stable'
+          
+      # Устанавливаем библиотеки Linux, чтобы Flutter был доволен
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev liblzma-dev clang cmake ninja-build pkg-config
+          
+      # Принимаем лицензии Android SDK
+      - name: Accept Android Licenses
+        run: |
+          yes | flutter doctor --android-licenses || true
           
       - name: Install Flet (старая версия)
         run: pip install flet==0.24.1
