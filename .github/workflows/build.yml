@@ -6,23 +6,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
+          
       - name: Install Flet
         run: pip install flet
         
       - name: Build APK
-        run: flet build apk --yes
-        
-      - name: Find APK
-        run: find build -name "*.apk"   # Эта команда найдет, где лежит файл
-        
+        run: |
+          # ХАК: Удаляем watchdog из зависимостей flet-cli перед сборкой
+          pip uninstall watchdog -y || true
+          flet build apk --yes
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
