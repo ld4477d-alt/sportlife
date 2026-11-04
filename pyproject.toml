@@ -2,9 +2,8 @@
 name = "sport_life"
 version = "1.0.0"
 description = "Спорт лайф - магазин спортивной одежды"
-# ВОТ ГЛАВНАЯ СТРОЧКА: говорим экшену, что нам нужен Flet
 dependencies = [
-    "flet==0.24.1",
+    "flet>=0.26.0",
     "requests==2.32.3"
 ]
 
