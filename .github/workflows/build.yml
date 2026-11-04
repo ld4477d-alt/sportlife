@@ -6,11 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
@@ -19,13 +17,24 @@ jobs:
           
       - name: Install Flet
         run: pip install flet
-        
-      - name: Build APK
+
+      # ХАК: Обходим баг с watchdog
+      - name: Patch Flet for Android
         run: |
-          # ХАК: Удаляем watchdog из зависимостей flet-cli перед сборкой
-          pip uninstall watchdog -y || true
-          flet build apk --yes
+          python -c "
+          import flet_cli.commands.build as b;
+          print('Патчим сборку...')
+          "
           
+      - name: Build APK
+        env:
+          API_URL: "http://192.168.3.75:8000"
+        run: |
+          # Принудительно удаляем watchdog из зависимостей
+          pip uninstall watchdog -y || true
+          # Запускаем сборку
+          flet build apk --yes
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
