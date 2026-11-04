@@ -11,5 +11,4 @@ company = "Sport Life"
 [tool.flet.app]
 path = "."
 module = "main"
-# Исключаем watchdog из процесса сборки
-exclude = ["watchdog"]
+exclude = ["watchdog", "uvicorn", "fastapi", "sqlalchemy"]
