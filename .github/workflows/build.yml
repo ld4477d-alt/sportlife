@@ -9,41 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       
-      - name: Install dependencies
-        run: pip install "flet>=0.26.0" requests==2.32.3
+      - name: Install Flet CLI
+        run: pip install "flet>=1.0.0"
       
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.5'
-          channel: 'stable'
-          cache: true
-      
-      - name: Install Linux dependencies
+      - name: Install Linux build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev ninja-build
-      
-      - name: Enable Android
-        run: flutter config --enable-android
-      
-      - name: Accept Android licenses
-        run: yes | flutter doctor --android-licenses || true
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
       
       - name: Clean previous builds
         run: rm -rf build
       
-      - name: Build APK
-        run: flet build apk
+      - name: Build APK (auto-accept Flutter installation)
+        # Команда 'yes |' автоматически отвечает 'y' на все вопросы Flet
+        run: yes | flet build apk
       
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: sport-life-apk
